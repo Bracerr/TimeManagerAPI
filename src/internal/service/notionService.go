@@ -6,6 +6,7 @@ import (
 	"TimeManagerAuth/src/internal/repository"
 	"TimeManagerAuth/src/internal/scripts/primitiveConvert"
 	"TimeManagerAuth/src/pkg/customErrors"
+	"TimeManagerAuth/src/pkg/payload/requests"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 	"time"
@@ -139,4 +140,12 @@ func (n *NotionService) UpdateNotion(updateNotionDto *dto.UpdateNotionDto) (*dom
 	}
 
 	return n.repo.UpdateNotion(notion)
+}
+
+func (n *NotionService) NotionSearch(req *requests.NotionSearchRequest) ([]domain.Notion, error) {
+	notions, err := n.repo.NotionSearch(req)
+	if err != nil {
+		return nil, err
+	}
+	return notions, nil
 }

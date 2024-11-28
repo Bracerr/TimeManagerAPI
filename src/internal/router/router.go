@@ -39,6 +39,6 @@ func SetupRoute(e *echo.Echo, userService *service.UserService,
 		notionGroup.GET("", notionHandler.GetUsersNotions)
 		notionGroup.DELETE("", notionHandler.DeleteNotion)
 		notionGroup.PUT("", notionHandler.UpdateNotion)
+		notionGroup.GET("/search", notionHandler.NotionSearch)
 	}
-	//e.GET("/swagger/*", echoSwagger.WrapHandler)
 }
