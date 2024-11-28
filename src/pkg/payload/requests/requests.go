@@ -10,3 +10,11 @@ type SignUpRequest struct {
 	Password string `bson:"password" json:"password" validate:"required"`
 	Role     string `bson:"role" json:"role"`
 }
+
+type NotionSearchRequest struct {
+	ProjectID   string `json:"projectId" validate:"required"`
+	StartTime   string `json:"startTime,omitempty"`
+	EndTime     string `json:"endTime,omitempty"`
+	Name        string `json:"name,omitempty"`
+	Description string `json:"description,omitempty"`
+}

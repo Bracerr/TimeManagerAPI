@@ -6,6 +6,7 @@ import (
 	"TimeManagerAuth/src/internal/scripts/primitiveConvert"
 	"TimeManagerAuth/src/internal/service"
 	"TimeManagerAuth/src/pkg/customErrors"
+	"TimeManagerAuth/src/pkg/payload/requests"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -111,4 +112,23 @@ func (n *NotionHandler) UpdateNotion(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, notion)
+}
+
+func (n *NotionHandler) NotionSearch(c echo.Context) error {
+	notionReq := new(requests.NotionSearchRequest)
+
+	if err := c.Bind(notionReq); err != nil {
+		return customErrors.NewAppError(http.StatusInternalServerError, "ошибка преобразования данных в json")
+	}
+
+	if err := n.validator.Struct(notionReq); err != nil {
+		return customErrors.NewAppError(http.StatusBadRequest, err.Error())
+	}
+
+	notions, err := n.service.NotionSearch(notionReq)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, notions)
+
 }
