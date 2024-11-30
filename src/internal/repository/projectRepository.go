@@ -248,7 +248,7 @@ func (r *ProjectRepository) ProjectSearch(req *requests.ProjectSearchRequest) ([
 		if err != nil {
 			return nil, err
 		}
-		filter["project.$id"] = primitiveProjectID
+		filter["_id"] = primitiveProjectID
 	}
 
 	if req.Name != "" {
