@@ -4,6 +4,7 @@ import (
 	"TimeManagerAuth/src/internal/domain"
 	"TimeManagerAuth/src/internal/dto"
 	"TimeManagerAuth/src/pkg/customErrors"
+	"TimeManagerAuth/src/pkg/payload/requests"
 	"errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -237,4 +238,32 @@ func (r *ProjectRepository) UpdateNotionArray(notion *domain.Notion, projectID p
 		return customErrors.NewAppError(http.StatusBadRequest, err.Error())
 	}
 	return nil
+}
+
+func (r *ProjectRepository) ProjectSearch(req *requests.ProjectSearchRequest) ([]domain.Project, error) {
+	filter := bson.M{}
+
+	if req.ProjectID != "" {
+		primitiveProjectID, err := stringToObjectId(req.ProjectID)
+		if err != nil {
+			return nil, err
+		}
+		filter["project.$id"] = primitiveProjectID
+	}
+
+	if req.Name != "" {
+		filter["name"] = bson.M{"$regex": req.Name, "$options": "i"}
+	}
+
+	cursor, err := r.collection.Find(context.TODO(), filter)
+	if err != nil {
+		return nil, customErrors.NewAppError(http.StatusInternalServerError, "ошибка получения записей")
+	}
+	defer cursor.Close(context.TODO())
+
+	var projects []domain.Project
+	if err = cursor.All(context.TODO(), &projects); err != nil {
+		return nil, customErrors.NewAppError(http.StatusBadRequest, "ошибка преобразования записей")
+	}
+	return projects, nil
 }
