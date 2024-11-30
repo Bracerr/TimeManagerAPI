@@ -5,7 +5,6 @@ import (
 	"TimeManagerAuth/src/internal/dto"
 	"TimeManagerAuth/src/internal/repository"
 	"TimeManagerAuth/src/pkg/customErrors"
-	"TimeManagerAuth/src/pkg/payload/requests"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 )
@@ -83,8 +82,8 @@ func (p *ProjectService) UpdateProject(updateProjectDto *dto.UpdateProjectDto, u
 	return project, nil
 }
 
-func (p *ProjectService) ProjectSearch(req *requests.ProjectSearchRequest) ([]domain.Project, error) {
-	projects, err := p.repo.ProjectSearch(req)
+func (p *ProjectService) ProjectSearch(projectId string) ([]domain.Project, error) {
+	projects, err := p.repo.ProjectSearch(projectId)
 	if err != nil {
 		return nil, err
 	}

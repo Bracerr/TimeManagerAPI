@@ -4,7 +4,6 @@ import (
 	"TimeManagerAuth/src/internal/domain"
 	"TimeManagerAuth/src/internal/dto"
 	"TimeManagerAuth/src/pkg/customErrors"
-	"TimeManagerAuth/src/pkg/payload/requests"
 	"errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -240,19 +239,15 @@ func (r *ProjectRepository) UpdateNotionArray(notion *domain.Notion, projectID p
 	return nil
 }
 
-func (r *ProjectRepository) ProjectSearch(req *requests.ProjectSearchRequest) ([]domain.Project, error) {
+func (r *ProjectRepository) ProjectSearch(projectId string) ([]domain.Project, error) {
 	filter := bson.M{}
 
-	if req.ProjectID != "" {
-		primitiveProjectID, err := stringToObjectId(req.ProjectID)
+	if projectId != "" {
+		primitiveProjectID, err := stringToObjectId(projectId)
 		if err != nil {
 			return nil, err
 		}
 		filter["_id"] = primitiveProjectID
-	}
-
-	if req.Name != "" {
-		filter["name"] = bson.M{"$regex": req.Name, "$options": "i"}
 	}
 
 	cursor, err := r.collection.Find(context.TODO(), filter)

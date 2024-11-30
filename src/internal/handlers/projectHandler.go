@@ -5,7 +5,6 @@ import (
 	"TimeManagerAuth/src/internal/dto"
 	"TimeManagerAuth/src/internal/service"
 	"TimeManagerAuth/src/pkg/customErrors"
-	"TimeManagerAuth/src/pkg/payload/requests"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -121,17 +120,17 @@ func (p *ProjectHandler) UpdateProject(c echo.Context) error {
 }
 
 func (p *ProjectHandler) ProjectSearch(c echo.Context) error {
-	req := new(requests.ProjectSearchRequest)
+	projectId := c.QueryParam("id")
 
-	if err := c.Bind(req); err != nil {
-		return customErrors.NewAppError(http.StatusInternalServerError, "Ошибка преобразования данных в json")
-	}
+	//if err := c.Bind(projectId); err != nil {
+	//	return customErrors.NewAppError(http.StatusInternalServerError, "Ошибка преобразования данных в json")
+	//}
+	//
+	//if err := p.validator.Struct(projectId); err != nil {
+	//	return customErrors.NewAppError(http.StatusBadRequest, err.Error())
+	//}
 
-	if err := p.validator.Struct(req); err != nil {
-		return customErrors.NewAppError(http.StatusBadRequest, err.Error())
-	}
-
-	projects, err := p.service.ProjectSearch(req)
+	projects, err := p.service.ProjectSearch(projectId)
 	if err != nil {
 		return err
 	}
