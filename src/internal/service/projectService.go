@@ -84,9 +84,9 @@ func (p *ProjectService) UpdateProject(updateProjectDto *dto.UpdateProjectDto, u
 }
 
 func (p *ProjectService) ProjectSearch(req *requests.ProjectSearchRequest) ([]domain.Project, error) {
-	notions, err := p.repo.ProjectSearch(req)
+	projects, err := p.repo.ProjectSearch(req)
 	if err != nil {
 		return nil, err
 	}
-	return notions, nil
+	return projects, nil
 }
