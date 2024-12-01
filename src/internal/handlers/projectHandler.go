@@ -120,15 +120,7 @@ func (p *ProjectHandler) UpdateProject(c echo.Context) error {
 }
 
 func (p *ProjectHandler) ProjectSearch(c echo.Context) error {
-	projectId := c.QueryParam("id")
-
-	//if err := c.Bind(projectId); err != nil {
-	//	return customErrors.NewAppError(http.StatusInternalServerError, "Ошибка преобразования данных в json")
-	//}
-	//
-	//if err := p.validator.Struct(projectId); err != nil {
-	//	return customErrors.NewAppError(http.StatusBadRequest, err.Error())
-	//}
+	projectId := c.QueryParam("projectId")
 
 	projects, err := p.service.ProjectSearch(projectId)
 	if err != nil {

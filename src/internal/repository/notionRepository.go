@@ -2,9 +2,7 @@ package repository
 
 import (
 	"TimeManagerAuth/src/internal/domain"
-	"TimeManagerAuth/src/internal/scripts/primitiveConvert"
 	"TimeManagerAuth/src/pkg/customErrors"
-	"TimeManagerAuth/src/pkg/payload/requests"
 	"errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -114,39 +112,15 @@ func (r *NotionRepository) UpdateNotion(notion *domain.Notion) (*domain.Notion, 
 
 	return notion, nil
 }
-func (r *NotionRepository) NotionSearch(req *requests.NotionSearchRequest) ([]domain.Notion, error) {
+func (r *NotionRepository) NotionSearch(projectId string) ([]domain.Notion, error) {
 	filter := bson.M{}
 
-	if req.ProjectID != "" {
-		primitiveProjectID, err := stringToObjectId(req.ProjectID)
+	if projectId != "" {
+		primitiveProjectID, err := stringToObjectId(projectId)
 		if err != nil {
 			return nil, err
 		}
 		filter["project.$id"] = primitiveProjectID
-	}
-
-	if req.StartTime != "" {
-		primitiveStartDate, err := primitiveConvert.StringToPrimitiveDate(req.StartTime)
-		if err != nil {
-			return nil, err
-		}
-		filter["startTime"] = bson.M{"$gte": primitiveStartDate}
-	}
-
-	if req.EndTime != "" {
-		primitiveEndDate, err := primitiveConvert.StringToPrimitiveDate(req.EndTime)
-		if err != nil {
-			return nil, err
-		}
-		filter["endTime"] = bson.M{"$lte": primitiveEndDate}
-	}
-
-	if req.Name != "" {
-		filter["name"] = bson.M{"$regex": req.Name, "$options": "i"}
-	}
-
-	if req.Description != "" {
-		filter["description"] = bson.M{"$regex": req.Description, "$options": "i"}
 	}
 
 	cursor, err := r.collection.Find(context.TODO(), filter)
