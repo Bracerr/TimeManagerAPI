@@ -8,6 +8,7 @@ import (
 	"TimeManagerAuth/src/pkg/config"
 	"TimeManagerAuth/src/pkg/database"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"golang.org/x/net/context"
 	"log"
 	"time"
@@ -53,6 +54,7 @@ func main() {
 	notionService := service.NewNotionService(notionRepo, projectRepo)
 
 	e = echo.New()
+	e.Use(middleware.CORS())
 	router.SetupRoute(e, userService, projectService, jwtManager, userRepo, notionService)
 
 	e.Logger.Fatal(e.Start(":8080"))

@@ -238,3 +238,27 @@ func (r *ProjectRepository) UpdateNotionArray(notion *domain.Notion, projectID p
 	}
 	return nil
 }
+
+func (r *ProjectRepository) ProjectSearch(projectId string) ([]domain.Project, error) {
+	filter := bson.M{}
+
+	if projectId != "" {
+		primitiveProjectID, err := stringToObjectId(projectId)
+		if err != nil {
+			return nil, err
+		}
+		filter["_id"] = primitiveProjectID
+	}
+
+	cursor, err := r.collection.Find(context.TODO(), filter)
+	if err != nil {
+		return nil, customErrors.NewAppError(http.StatusInternalServerError, "ошибка получения записей")
+	}
+	defer cursor.Close(context.TODO())
+
+	var projects []domain.Project
+	if err = cursor.All(context.TODO(), &projects); err != nil {
+		return nil, customErrors.NewAppError(http.StatusBadRequest, "ошибка преобразования записей")
+	}
+	return projects, nil
+}

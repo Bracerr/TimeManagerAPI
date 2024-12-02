@@ -81,3 +81,11 @@ func (p *ProjectService) UpdateProject(updateProjectDto *dto.UpdateProjectDto, u
 
 	return project, nil
 }
+
+func (p *ProjectService) ProjectSearch(projectId string) ([]domain.Project, error) {
+	projects, err := p.repo.ProjectSearch(projectId)
+	if err != nil {
+		return nil, err
+	}
+	return projects, nil
+}

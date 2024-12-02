@@ -18,3 +18,8 @@ type NotionSearchRequest struct {
 	Name        string `json:"name,omitempty"`
 	Description string `json:"description,omitempty"`
 }
+
+type ProjectSearchRequest struct {
+	ProjectID string `json:"projectId" validate:"required"`
+	Name      string `json:"name,omitempty"`
+}

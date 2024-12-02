@@ -31,6 +31,7 @@ func SetupRoute(e *echo.Echo, userService *service.UserService,
 		projectGroup.GET("/project", projectHandler.GetUserProject)
 		projectGroup.DELETE("", projectHandler.DeleteProject)
 		projectGroup.PUT("", projectHandler.UpdateProject)
+		projectGroup.GET("/search", projectHandler.ProjectSearch)
 	}
 
 	notionGroup := e.Group("/notions", customMiddleWare.ErrorHandlerMiddleware, customMiddleWare.JWTMiddleware(jwtManager, userRepository))

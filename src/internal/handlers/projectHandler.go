@@ -118,3 +118,13 @@ func (p *ProjectHandler) UpdateProject(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, project)
 }
+
+func (p *ProjectHandler) ProjectSearch(c echo.Context) error {
+	projectId := c.QueryParam("projectId")
+
+	projects, err := p.service.ProjectSearch(projectId)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, projects)
+}
